@@ -3,36 +3,19 @@ import sys
 import ctypes
 import time
 import winreg
+from colorama import Fore
 
-def main_text():
-    print('  _____ _____ _______ ____  ')
-    print(' / ____/ ____|__   __|  _ \ ')
-    print('| |   | |       | |  | |_) |')
-    print('| |   | |       | |  |  _ < ')
-    print('| |___| |____   | |  | |_) |')
-    print(' \_____\_____|  |_|  |____/ ')
-    print('\nVersion 0.2\nThis project made by wyx6669036')
-    print('_'*100 + '\n')
+def main_text():# 主页面上方的文字
+    print(Fore.LIGHTBLUE_EX + '  _____ _____ _______ ____  ')
+    print(Fore.LIGHTBLUE_EX + ' / ____/ ____|__   __|  _ \ ')
+    print(Fore.LIGHTBLUE_EX + '| |   | |       | |  | |_) |')
+    print(Fore.LIGHTBLUE_EX + '| |   | |       | |  |  _ < ')
+    print(Fore.LIGHTBLUE_EX + '| |___| |____   | |  | |_) |')
+    print(Fore.LIGHTBLUE_EX + ' \_____\_____|  |_|  |____/ ')
+    print(Fore.RED + '\nVersion 0.3\nThis project made by wyx6669036')
+    print(Fore.RESET + '_'*100 + '\n')
 
-def run_in_program():
-    main_text()
-    program_path = input("请输入要运行的程序的完整路径: ")
-    print('如果有弹出窗口，请' + '点击' + 'Agree')
-    print('\n控制台输出：')
-    os.system('psexec -s '+ program_path)
-    ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——程序嵌入')
-    print('\n程序已退出\n')
-
-def run_out_program():
-    main_text()
-    program_path = input("请输入要运行的程序的完整路径: ")
-    print('如果有弹出窗口，请' + '点击' + 'Agree')
-    print('\n控制台输出：')
-    os.system('psexec -s -i '+ program_path)
-    ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——外部窗口') 
-    print('\n程序已退出\n')
-
-def is_admin():
+def is_admin():# 检查权限
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
@@ -41,127 +24,127 @@ def is_admin():
 def run_as_admin():
     # 获取当前脚本的完整路径
     script_path = os.path.abspath(__file__)
-    # 使用 ShellExecuteEx 请求管理员权限
+    # 请求管理员权限
     params = f'"{script_path}"'
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
 
-def main():#主函数
-    if not is_admin():
-        # print("请以管理员权限运行此程序。")      #果然不该让傻逼ai帮忙写的
-        # input("按下回车键退出...")   #还得我手动删一遍
+def main():# 主体
+    if not is_admin():# 检查权限
         run_as_admin()
         sys.exit()
 
+    psexec_dir = os.getcwd() + r'\psexec.exe '# 后面的空格不能删，因为在下面的代码里的参数前没有空格
     while True:
-        ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——主页面')
+        ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——主页面')
         os.system('cls')  # 清空控制台输出
         main_text()
-        print("请选择一个选项:")
-        print("1.关闭极域")
-        print("2.强制关闭极域（适用于第一种无法关闭的情况）")
-        print("3.以system权限运行程序")
-        print("4.禁用关机")
-        print("5.启用关机")
-        print("6.退出")#列出支持的选项
+        print(Fore.LIGHTBLUE_EX + "请选择一个选项:")
+        print(Fore.YELLOW + "1.关闭极域")
+        print(Fore.YELLOW + "2.强制关闭极域（适用于第一种无法关闭的情况）")
+        print(Fore.YELLOW + "3.以system权限运行程序")
+        print(Fore.YELLOW + "4.禁用关机")
+        print(Fore.YELLOW + "5.启用关机")
+        print(Fore.YELLOW + "6.解除所有限制")
+        print(Fore.YELLOW + "7.退出")# 列出支持的选项
 
-        choice = input("\n输入选项前的数字以运行对应的功能: ")#用户选择
+        choice = input(Fore.LIGHTYELLOW_EX + "\n输入选项前的数字以运行对应的功能: ")# 用户选择
         os.system('cls')  # 清空控制台输出
 
-        if choice == "1":#关闭极域
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——关闭极域')
+        if choice == "1":# 关闭极域
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——关闭极域')
             main_text()
-            print('控制台输出：\n')
+            print(Fore.RESET + '控制台输出：\n')
             os.system("taskkill /f /im studentmain.exe")
-            print("\n极域已关闭\n")
-        elif choice == '2':#使用psexec提权至system关闭
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——强制关闭极域')
+            print(Fore.RED + "\n极域已关闭\n")
+
+        elif choice == '2':# 使用psexec提权至system关闭
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——强制关闭极域')
             main_text()
-            print('如果有弹出窗口，请' + '点击' + 'Agree')
-            print('\n控制台输出：')
-            os.system('psexec -s taskkill /f /im studentmain.exe')
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——强制关闭极域')
-            print("\n极域已关闭\n")
-        elif choice == "3":#以system运行程序
-            # if validate_path(program_path) and os.path.isfile(program_path):
-            #     print(Fore.GREEN + "\n正在运行程序...\n")
-            #     os.system(f'"{program_path}"')
-            # else:
-            #     print("\n无效的路径，请重新选择。\n")
-            #人机ai写的啥啊
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——以system权限运行程序')
+            print(Fore.LIGHTBLUE_EX + '如果有弹出窗口，请' + Fore.RED + '点击' + Fore.YELLOW + 'Agree')
+            print(Fore.RESET + '\n控制台输出：')
+            os.system(psexec_dir + '-s taskkill /f /im studentmain.exe')
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——强制关闭极域')
+            print(Fore.RED + "\n极域已关闭\n")
+
+        elif choice == "3":# 以system运行程序  # 这里原本是选择是否嵌入程序内的，但是发现直接全部单独开窗口更好，也防止傻逼在嵌入功能开gui没界面然后🐕叫
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——以system权限运行程序')
             os.system('cls')
             main_text()
-            print("请选择一个选项:")
-            print("1.在程序内运行")
-            print("2.在程序外运行（单独一个窗口）")#二级菜单
+            program_path = input(Fore.LIGHTYELLOW_EX + "请输入要运行的程序的完整路径: ")
+            print(Fore.LIGHTBLUE_EX + '如果有弹出窗口，请' + Fore.RED + '点击' + Fore.YELLOW + 'Agree')
+            print(Fore.RESET + '\n控制台输出：')
+            os.system(psexec_dir + '-s -i '+ program_path)
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB 0.3 ——以system权限运行程序') 
+            print(Fore.RED + '\n程序已退出\n')
 
-            run_program_choice = input("\n输入选项前的数字以运行对应的功能: ")#用户选择
-            os.system('cls')  # 清空控制台输出
-
-            if run_program_choice == '1':
-                ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——程序嵌入')
-                run_in_program()
-            elif run_program_choice == '2':
-                ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——外部窗口')
-                run_out_program()
-            else:
-                main_text()
-                print("无效的选项，请重新选择。\n")
-        elif choice == "4":#禁用关机（不防电源线、长按关机键）
-            main_text()    #理论上应该叫电源选项，但是可能有人看不懂
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——禁用关机')
+        elif choice == "4":# 禁用关机（不防电源线、长按关机键）
+            main_text()    # 理论上应该叫电源选项，但是可能有人看不懂
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——禁用关机')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'NoClose',0,winreg.REG_DWORD,1)
-                print('已将值 "NoClose" 设置为 "1"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "NoClose" 设置为 "1"')# 删除开始菜单的关机按钮
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'HidePowerOptions',0,winreg.REG_DWORD,1)
-                print('已将值 "HidePowerOptions" 设置为 "1"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "HidePowerOptions" 设置为 "1"')# 隐藏Ctrl + Alt + Del屏幕的关机按钮（其实这个功能就能顺便隐藏开始菜单的了）
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideShutDown') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,1)
-                print('已将值 "value" 设置为 "1"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "1"')# 下面是针对登陆界面的按钮，全部搞上不怕出问题
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideSignOut') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,1)
-                print('已将值 "value" 设置为 "1"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "1"')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideRestart') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,1)
-                print('已将值 "value" 设置为 "1"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "1"')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideSwitchAccount') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,1)
-                print('已将值 "value" 设置为 "1"')
-        elif choice == "5":#启用关机
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "1"')
+
+        elif choice == "5":# 启用关机
             main_text()
-            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v1.0 ——启用开机')
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——启用开机')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'NoClose',0,winreg.REG_DWORD,0)
-                print('已将值 "NoClose" 设置为 "0"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "NoClose" 设置为 "0"')# 恢复开始菜单的电源选项
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'HidePowerOptions',0,winreg.REG_DWORD,0)
-                print('已将值 "HidePowerOptions" 设置为 "0"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "HidePowerOptions" 设置为 "0"')# 恢复Ctrl + Alt + Del屏幕的关机按钮
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideShutDown') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,0)
-                print('已将值 "value" 设置为 "0"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "0"')# 将登陆界面的按钮还原
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideSignOut') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,0)
-                print('已将值 "value" 设置为 "0"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "0"')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideRestart') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,0)
-                print('已将值 "value" 设置为 "0"')
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "0"')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\PolicyManager\default\Start\HideSwitchAccount') as key:
                 winreg.SetValueEx(key,'value',0,winreg.REG_DWORD,0)
-                print('已将值 "value" 设置为 "0"')
-        elif choice == "6":#退出
-            break
-        else:#无效选项
-            main_text()
-            print("无效的选项，请重新选择。\n")
-        # print('返回（3）')
-        # time.sleep(3)
-        print('返回（3）',end='\r')
-        time.sleep(1)
-        print('返回（2）',end='\r')
-        time.sleep(1)
-        print('返回（1）',end='\r')
-        time.sleep(1)
+                print(Fore.LIGHTCYAN_EX + '已将值 "value" 设置为 "0"')
 
-if __name__ == "__main__":#运行主函数
+        elif choice == "6":# 解除所有限制
+            main_text()
+            ctypes.windll.kernel32.SetConsoleTitleW('CCTB v0.3 ——解除所有限制')
+            parent_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion", 0, winreg.KEY_WRITE)
+            winreg.DeleteKey(parent_key, "Policies")# 删除本地主机的限制
+            print(Fore.LIGHTCYAN_EX + '已删除本地主机Policies限制')
+            parent_key.Close()
+            # ========================================================================== 这是分割线，防止瞎子传奇之寻找眼珠子
+            parent_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows\CurrentVersion", 0, winreg.KEY_WRITE)
+            winreg.DeleteKey(parent_key, "Policies")# 删除当前用户的限制
+            print(Fore.LIGHTCYAN_EX + '已删除当前用户Policies限制')
+            parent_key.Close()
+            print(Fore.LIGHTBLUE_EX + '如果执行过“禁用关机”，请' + Fore.RED + '重新执行' + Fore.YELLOW + '禁用关机')
+
+        elif choice == "7":# 退出
+            break
+
+        else:# 无效选项
+            main_text()
+            print(Fore.RED + "无效的选项，请重新选择。\n")
+        
+        for i in ['3','2','1']:# 用dick想出来的倒计时，比硬堆叠好点...吧
+            print(Fore.LIGHTYELLOW_EX + '返回（' + i + '）', end = '\r')
+            time.sleep(1)
+
+if __name__ == "__main__":# 运行
     main()
