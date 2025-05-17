@@ -5,6 +5,7 @@ import time
 import winreg
 from colorama import Fore, init
 import platform
+from RunProgram import RunProgram
 
 
 init(autoreset=True)  # 自动重置colorama防止乱码
@@ -14,7 +15,7 @@ system_release = platform.release()
 options = ['1.强制关闭极域','2.以system权限运行程序','3.禁用关机','4.启用关机','5.解除所有限制','6.运行内置系统程序','7.退出']  # 选项列表
 inbuilt_system_program = ['1.命令提示符(cmd)','2.注册表编辑器(regedit)','3.任务管理器(taskmgr)']
 psexec_dir = os.getcwd() + r'\resource\psexec\psexec.exe '# 后面的空格不能删，因为在下面的代码里的参数前没有空格
-version = '0.4'                                           # 不要使用vscode的调试！！！ 否则getcwd()获取到的是%userprofile%（比如作者的用户名是wyx6669036，取到的是C:\Users\wyx6669036）
+version = 'b0.4.2'                                           # 不要使用vscode的调试！！！ 否则getcwd()获取到的是%userprofile%（比如作者的用户名是wyx6669036，取到的是C:\Users\wyx6669036）
 cmd_dir = os.getcwd() + r'\resource\cmd'
 regedit_dir = os.getcwd() + r'\resource\regedit'
 taskkill_dir = os.getcwd() + r'\resource\taskkill'
@@ -30,7 +31,7 @@ def main_text():# 主页面上方的文字
     else:
         print(Fore.LIGHTBLUE_EX + '| |___| |____   | |  | |_) |' + Fore.RESET + ' '*10 + f'管理员权限：{admin_check()} ' + Fore.RED + '（需要获取）')  
     print(Fore.LIGHTBLUE_EX + ' \\_____\\_____|  |_|  |____/ ' + Fore.RESET + ' '*10 + f'程序版本：{version}')
-    print(Fore.RED + f'\nThis project made by wyx6669036')
+    print(Fore.RED + '\nThis project made by wyx6669036')
     print(Fore.RESET + '_'*100 + '\n')
 
 def admin_check():# 检查权限
@@ -52,7 +53,7 @@ def main():# 主体
         sys.exit()
 
     while True:
-        ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——主页面')
+        ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——主页面')
         os.system('cls')  # 清空控制台输出
         main_text()
         print(Fore.LIGHTBLUE_EX + "请选择一个选项:")
@@ -61,9 +62,12 @@ def main():# 主体
 
         choice = input(Fore.LIGHTYELLOW_EX + "\n输入选项前的数字以运行对应的功能: ")# 用户选择
         os.system('cls')  # 清空控制台输出
+        if DEBUG == True:
+            input(Fore.LIGHTYELLOW_EX + f'[DEBUG] choice = {choice}')# 调试模式下输出选择的选项
+
 
         if choice == '1':# 使用psexec提权至system关闭
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——强制关闭极域')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——强制关闭极域')
             main_text()
             print(Fore.LIGHTBLUE_EX + '如果有弹出窗口，请' + Fore.RED + '点击' + Fore.YELLOW + 'Agree')
             if system_release == '7' or system_release == '8':
@@ -71,28 +75,37 @@ def main():# 主体
                 main_text()
                 print(Fore.RESET + '\n控制台输出：')
                 os.system(psexec_dir + '-s -accepteula ' + taskkill_dir + '\CCTB.Taskkill.Win7.exe' + ' /f /im studentmain.exe')
+                if DEBUG == True:
+                    print(Fore.LIGHTYELLOW_EX + f'[DEBUG] psexec_dir = {psexec_dir}')
+                    input(Fore.LIGHTYELLOW_EX + f'[DEBUG] taskkill_dir = {taskkill_dir}')
             elif system_release == '10' or system_release == '11':
                 os.system('cls')
                 main_text()
                 print(Fore.RESET + '\n控制台输出：')
                 os.system(psexec_dir + '-s -accepteula ' + taskkill_dir + '\CCTB.Taskkill.Win10.exe' + ' /f /im studentmain.exe')
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——强制关闭极域')
+                if DEBUG == True:
+                    print(Fore.LIGHTYELLOW_EX + f'[DEBUG] psexec_dir = {psexec_dir}')
+                    input(Fore.LIGHTYELLOW_EX + f'[DEBUG] taskkill_dir = {taskkill_dir}')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——强制关闭极域')
             print(Fore.RED + "\n极域已关闭\n")
 
         elif choice == "2":# 以system运行程序  # 这里原本是选择是否嵌入程序内的，但是发现直接全部单独开窗口更好，也防止傻逼在嵌入功能开gui没界面然后🐕叫
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——以system权限运行程序')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——以system权限运行程序')
             os.system('cls')
             main_text()
             program_path = input(Fore.LIGHTYELLOW_EX + "请输入要运行的程序的完整路径: ")
             print(Fore.LIGHTBLUE_EX + '如果有弹出窗口，请' + Fore.RED + '点击' + Fore.YELLOW + 'Agree')
             print(Fore.RESET + '\n控制台输出：')
-            os.system(psexec_dir + '-s -i -accepteula'+ program_path)
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——以system权限运行程序') 
+            os.system(psexec_dir + '-s -i -accepteula '+ program_path)
+            if DEBUG == True:
+                print(Fore.LIGHTYELLOW_EX + f'[DEBUG] psexec_dir = {psexec_dir}')
+                input(Fore.LIGHTYELLOW_EX + f'[DEBUG] program_path = {program_path}')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——以system权限运行程序') 
             print(Fore.RED + '\n程序已退出\n')
 
         elif choice == "3":# 禁用关机（不防电源线、长按关机键）
             main_text()    # 理论上应该叫电源选项，但是可能有人看不懂
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——禁用关机')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——禁用关机')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'NoClose',0,winreg.REG_DWORD,1)
                 print(Fore.LIGHTCYAN_EX + '已将值 "NoClose" 设置为 "1"')# 删除开始菜单的关机按钮
@@ -114,7 +127,7 @@ def main():# 主体
 
         elif choice == "4":# 启用关机
             main_text()
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——启用开机')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——启用开机')
             with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer') as key:
                 winreg.SetValueEx(key,'NoClose',0,winreg.REG_DWORD,0)
                 print(Fore.LIGHTCYAN_EX + '已将值 "NoClose" 设置为 "0"')# 恢复开始菜单的电源选项
@@ -136,7 +149,7 @@ def main():# 主体
 
         elif choice == "5":# 解除所有限制
             main_text()
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——解除所有限制')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——解除所有限制')
             parent_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion", 0, winreg.KEY_WRITE)
             winreg.DeleteKey(parent_key, "Policies")# 删除本地主机的限制
             print(Fore.LIGHTCYAN_EX + '已删除本地主机Policies限制')
@@ -149,7 +162,7 @@ def main():# 主体
             print(Fore.LIGHTBLUE_EX + '如果执行过“禁用关机”，请' + Fore.RED + '重新执行' + Fore.YELLOW + '禁用关机')
 
         elif choice == "6":# 运行内置系统程序
-            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB v{version} ——运行内置系统程序')
+            ctypes.windll.kernel32.SetConsoleTitleW(f'CCTB {version} ——运行内置系统程序')
             os.system('cls')
             main_text()
             print(Fore.LIGHTBLUE_EX + '请选择要运行的内置系统程序:')
@@ -161,51 +174,60 @@ def main():# 主体
 
             if system_release == '7' or system_release == '8':
                 if choice == '1':# 命令提示符
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + cmd_dir + '\CCTB.Command.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + cmd_dir + '\CCTB.Command.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + cmd_dir + '\CCTB.Command.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + cmd_dir + '\CCTB.Command.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, cmd_dir + '\CCTB.Command.Win7.exe', system_run, DEBUG)
+
                 elif choice == '2':# 注册表编辑器
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, regedit_dir + '\CCTB.Regedit.Win7.exe', system_run, DEBUG)
+
                 elif choice == '3':# 任务管理器
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, taskmgr_dir + '\CCTB.Taskmgr.Win7.exe', system_run, DEBUG)
+
                 else:
                     print(Fore.RED + "无效的选项，请重新选择。\n")
                     continue
             elif system_release == '10' or system_release == '11':
                 if choice == '1':# 命令提示符
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + cmd_dir + '\CCTB.Command.Win10.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + cmd_dir + '\CCTB.Command.Win10.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + cmd_dir + '\CCTB.Command.Win10.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + cmd_dir + '\CCTB.Command.Win10.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, cmd_dir + '\CCTB.Command.Win10.exe', system_run, DEBUG)
                 elif choice == '2':# 注册表编辑器
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win10.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win10.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win10.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + regedit_dir + '\CCTB.Regedit.Win10.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, regedit_dir + '\CCTB.Regedit.Win10.exe', system_run, DEBUG)
                 elif choice == '3':# 任务管理器
-                    if system_run == 'y':
-                        os.system(psexec_dir + '-s -i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
-                    elif system_run == 'n':
-                        os.system(psexec_dir + '-i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
-                        print(Fore.RED + '\n程序已退出\n')
+                    # if system_run == 'y':
+                    #     os.system(psexec_dir + '-s -i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    # elif system_run == 'n':
+                    #     os.system(psexec_dir + '-i -accepteula ' + taskmgr_dir + '\CCTB.Taskmgr.Win7.exe')
+                    #     print(Fore.RED + '\n程序已退出\n')
+                    RunProgram(psexec_dir, taskmgr_dir + '\CCTB.Taskmgr.Win7.exe', system_run, DEBUG)
                 else:
                     print(Fore.RED + "无效的选项，请重新选择。\n")
                     continue
@@ -225,4 +247,5 @@ def main():# 主体
             time.sleep(1)
 
 if __name__ == "__main__":# 运行
+    DEBUG = False
     main()
