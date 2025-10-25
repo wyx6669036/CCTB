@@ -13,6 +13,7 @@ def clearScreen():
     # 方法2: 使用 ANSI 转义序列
     try:
         print("\033[2J\033[H", end="", flush=True)
+        utils.Log.warn("Your system may impose certain restrictions or modifications, causing some operations to fail.")
         return
     except:
         pass
