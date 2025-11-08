@@ -16,6 +16,15 @@ from packages.utils.ConfigManager import config
 # 从配置管理器获取目标端口
 TARGET_PORT = config.get("target_port", 4705)
 
+"""
+使用方法：
+import packages.UtilsManager as utils
+utils.anti_full_screen("192.168.153.1") # 强制屏幕广播窗口化
+utils.send_teacher_message("123","192.168.153.1") # 向学生端发送教师聊天信息
+utils.start_applicaion("cmd","192.168.153.1") # 向学生端发送打开程序请求（可能失效）
+
+注意：上述所有ip均需要以实际为准
+"""
 
 @handle_exception(NetworkError, default_return=False, error_message="Failed to send anti full screen packet")
 def anti_full_screen(target_ip, target_port=TARGET_PORT):

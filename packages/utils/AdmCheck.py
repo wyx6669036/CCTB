@@ -8,6 +8,13 @@ import os
 from packages.utils import SysCheck
 from packages.utils.ErrorHandler import handle_exception, PermissionError
 
+"""
+使用方法：
+import packages.UtilsManager as utils
+utils.AdmCheck
+
+返回值：True/False
+"""
 
 @handle_exception(PermissionError, default_return=False, error_message="Failed to check administrator privileges")
 def checkAdm():

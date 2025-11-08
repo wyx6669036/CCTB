@@ -6,6 +6,15 @@
 import platform
 from packages.utils.ErrorHandler import handle_exception, SystemError
 
+"""
+检查系统版本工具
+使用方法：
+import packages.UtilsManager as utils
+utils.SysCheck()
+
+返回值：json
+eg.:{"name":"windows","version":"11"}
+"""
 
 @handle_exception(SystemError, default_return={"name": "unknown"}, error_message="Failed to get system information")
 def sysCheck():

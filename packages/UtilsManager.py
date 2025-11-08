@@ -1,10 +1,8 @@
 """
 UtilsManager
-Provide lazy accessors to utility functions to avoid circular imports.
-Previously this module imported many utility submodules at import-time which
-caused circular import errors (e.g. IPscanner -> UtilsManager -> IPscanner).
-This file exposes a small set of helper wrappers that import the real
-implementation only when they're called.
+把所有（并非）功能整合为一个，使用时仅需import packages.UtilsManager as utils即可
+有些功能没有整合到，要么用的不多要么懒得搞，到时候再说
+格式可以参考下面添加
 """
 
 # 导入错误处理模块

@@ -1,6 +1,26 @@
 """
 局域网IP扫描模块
 用于快速并发扫描局域网中的活跃主机
+IPscanner.py
+
+叫AI生成的没什么好说，可单独使用（移除对utils的依赖）
+用法：
+import packages.UtilsManager as utils
+utils.ip_scanner()
+
+返回值(eg.)：[("192.168.153.1",200)]
+若ping被禁用可能无法正常运行，依赖他的功能可能需要手动输入ip地址
+
+快速的并发局域网主机探测器（Windows 优先使用 ping）。
+用法示例：
+  python IPscanner.py --cidr 192.168.1.0/24
+  python IPscanner.py --test            # 自动检测本机 IP 并在 /30 小网段做快速自检
+
+实现说明：
+- 自动检测本机 IPv4 地址（通过 UDP 套接字连接到公网上的地址）
+- 默认假设 /24（当使用 --auto 或未指定时），但提供 --cidr 覆盖
+- 使用 subprocess 调用系统 ping（Windows: -n, -w）以避免需要管理员权限
+- 使用 ThreadPoolExecutor 并发执行 ping
 """
 
 from __future__ import annotations
