@@ -3,6 +3,16 @@ from packages.utils.GetTime import gettime
 
 init(autoreset=True)
 
+"""
+仿Codexus样式log
+使用方法：
+import packages.UtilsManager as utils
+
+utils.info("这是info")
+utils.warn("这是warn")
+utils.error("这是error")
+"""
+
 def info(text):
     print(Fore.LIGHTBLACK_EX + "[" + Fore.WHITE + gettime() + Style.BRIGHT + Fore.LIGHTWHITE_EX + " INF" + Fore.RESET + Fore.LIGHTBLACK_EX + "] " + Fore.LIGHTWHITE_EX + text)
     with open("log.txt", "a", encoding="ANSI") as f:
