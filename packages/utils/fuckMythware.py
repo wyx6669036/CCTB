@@ -11,6 +11,15 @@ from packages import UtilsManager as utils
 
 TARGET_PORT = 4705
 
+"""
+使用方法：
+import packages.UtilsManager as utils
+utils.anti_full_screen("192.168.153.1") # 强制屏幕广播窗口化
+utils.send_teacher_message("123","192.168.153.1") # 向学生端发送教师聊天信息
+utils.start_applicaion("cmd","192.168.153.1") # 向学生端发送打开程序请求（可能失效）
+
+注意：上述所有ip均需要以实际为准
+"""
 
 def anti_full_screen(target_ip, target_port=TARGET_PORT):
     """

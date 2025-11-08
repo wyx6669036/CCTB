@@ -2,6 +2,13 @@ import ctypes
 import os
 from packages.utils import SysCheck
 
+"""
+使用方法：
+import packages.UtilsManager as utils
+utils.AdmCheck
+
+返回值：True/False
+"""
 
 def checkAdm():
     system = SysCheck.sysCheck()

@@ -21,6 +21,7 @@ options = [
     "3.Send teacher message",
 ]
 
+# 主页面上方文字，准备改成legacy0.4信息多一点的样子，不知道会不会看着很乱，等着吧
 texts = Fore.LIGHTBLUE_EX + """\
   ____ ____ _____ ____  
  / ___/ ___|_   _| __ ) 
@@ -37,7 +38,6 @@ def menu(selected_index):
 
     for i, option in enumerate(options):
         if i == selected_index:
-            # 使用加粗红色字体显示选中项
             print(Style.BRIGHT + Fore.LIGHTBLUE_EX + f"> {option}" + Style.RESET_ALL)
         else:
             print(f"  {option}")

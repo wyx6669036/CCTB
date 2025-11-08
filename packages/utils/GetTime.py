@@ -1,5 +1,9 @@
 import datetime
 
+"""
+单纯获取时间日期，未收入utilsmanager，等待后续更新
+"""
+
 def getdate():
     """获取当前日期
 

@@ -1,3 +1,8 @@
+"""
+启动cmdui的前置，可以直接启动cmdui绕过这个
+主要用于获取管理员权限，创建/删除log文件
+目前没办法在点击窗口右上角的X关闭时输出Exiting和bye，不过这俩玩意不重要
+"""
 import ctypes
 import sys
 import os

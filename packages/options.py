@@ -54,13 +54,13 @@ def selectOption(choice):
     input(Fore.LIGHTYELLOW_EX + "\nPress Enter to continue..." + Fore.RESET)
 
 def module2_main(status=True):
-    while status:
+    while status: # 循环强制全班屏幕广播窗口化
         for i in utils.ip_scanner():
             utils.anti_full_screen(i[0])
-        time.sleep(0.3)
+            time.sleep(0.03)
 
 def module3_main(choice, text):
-    if choice == "":
+    if choice == "": # 发送教室消息，不填是默认向所有人发送
         try:
             for i in utils.ip_scanner():
                 ips = i[0]
@@ -71,7 +71,7 @@ def module3_main(choice, text):
             utils.info("User input stopped.")
         except Exception as e:
             utils.error(e)
-    else:
+    else: # 如果不为空，尝试向对应ip发送，若ip不存在/瞎填，会报错但是有catch并转换为utils.error
         try:
             ips = choice
             utils.info(f"Sending message:[{text}]...")

@@ -1,10 +1,18 @@
 """
-lan_scan.py
+IPscanner.py
+
+叫AI生成的没什么好说，可单独使用（移除对utils的依赖）
+用法：
+import packages.UtilsManager as utils
+utils.ip_scanner()
+
+返回值(eg.)：[("192.168.153.1",200)]
+若ping被禁用可能无法正常运行，依赖他的功能可能需要手动输入ip地址
 
 快速的并发局域网主机探测器（Windows 优先使用 ping）。
 用法示例：
-  python lan_scan.py --cidr 192.168.1.0/24
-  python lan_scan.py --test            # 自动检测本机 IP 并在 /30 小网段做快速自检
+  python IPscanner.py --cidr 192.168.1.0/24
+  python IPscanner.py --test            # 自动检测本机 IP 并在 /30 小网段做快速自检
 
 实现说明：
 - 自动检测本机 IPv4 地址（通过 UDP 套接字连接到公网上的地址）

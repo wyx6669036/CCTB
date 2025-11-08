@@ -1,5 +1,14 @@
 import platform
 
+"""
+检查系统版本工具
+使用方法：
+import packages.UtilsManager as utils
+utils.SysCheck()
+
+返回值：json
+eg.:{"name":"windows","version":"11"}
+"""
 
 def sysCheck():
     system = platform.system()
