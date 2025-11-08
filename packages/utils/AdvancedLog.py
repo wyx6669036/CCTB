@@ -111,12 +111,56 @@ class CCTBLogger:
                     encoding='utf-8'
                 )
                 file_handler.setLevel(getattr(logging, file_level, logging.DEBUG))
-                file_formatter = self._get_formatter(LogFormat.DETAILED)
+                
+                # 使用自定义文件格式化器
+                if log_format == "colored":
+                    file_formatter = self._get_file_formatter()
+                else:
+                    file_formatter = self._get_formatter(LogFormat.DETAILED)
+                
                 file_handler.setFormatter(file_formatter)
                 self._logger.addHandler(file_handler)
             except Exception as e:
                 # 如果无法创建文件处理器，记录错误但不中断程序
                 self._logger.error(f"Failed to create file handler: {str(e)}")
+    
+    @handle_exception(LoggerError, default_return=None)
+    def _get_file_formatter(self):
+        """
+        获取文件输出专用的格式化器
+        
+        Returns:
+            文件格式化器实例
+        """
+        class FileFormatter(logging.Formatter):
+            """文件日志格式化器 - Codexus样式（无颜色）"""
+            
+            def format(self, record):
+                # 获取原始格式化消息
+                message = record.getMessage()
+                
+                # 获取当前时间
+                from packages.utils.GetTime import gettime
+                current_time = gettime()
+                
+                # 根据日志级别设置不同的格式
+                if record.levelname == 'INFO':
+                    # INFO级别日志格式
+                    return f"[{current_time} INF] {message}"
+                elif record.levelname == 'WARNING':
+                    # WARN级别日志格式
+                    return f"[{current_time} WRN] * {message}"
+                elif record.levelname == 'ERROR':
+                    # ERROR级别日志格式
+                    return f"[{current_time} ERR] * {message}"
+                elif record.levelname == 'DEBUG':
+                    # DEBUG级别日志格式
+                    return f"[{current_time} DBG] {message}"
+                else:
+                    # 其他级别默认格式
+                    return f"[{current_time} {record.levelname}] {message}"
+        
+        return FileFormatter()
     
     @handle_exception(LoggerError, default_return=None)
     def _get_formatter(self, format_type: LogFormat) -> logging.Formatter:
@@ -140,36 +184,42 @@ class CCTBLogger:
         elif format_type == LogFormat.COLORED:
             # 自定义彩色格式化器
             class ColoredFormatter(logging.Formatter):
-                """彩色日志格式化器"""
-                
-                # 定义颜色映射
-                COLORS = {
-                    'DEBUG': Fore.CYAN,
-                    'INFO': Fore.GREEN,
-                    'WARNING': Fore.YELLOW,
-                    'ERROR': Fore.RED,
-                    'CRITICAL': Fore.RED + Back.WHITE + Style.BRIGHT,
-                }
+                """彩色日志格式化器 - Codexus样式"""
                 
                 def format(self, record):
                     # 获取原始格式化消息
-                    log_message = super().format(record)
+                    message = record.getMessage()
                     
-                    # 添加颜色
-                    level_color = self.COLORS.get(record.levelname, '')
-                    if level_color:
-                        # 为不同级别添加不同颜色
-                        time_str = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{getdatetime()}{Fore.LIGHTBLACK_EX}]"
-                        level_str = f"{Style.BRIGHT}{level_color}{record.levelname}{Style.RESET_ALL}"
-                        message_str = f"{Fore.LIGHTWHITE_EX}{record.getMessage()}{Style.RESET_ALL}"
-                        
-                        if record.levelno in (logging.WARNING, logging.ERROR, logging.CRITICAL):
-                            # 警告和错误级别添加星号前缀
-                            message_str = f"{Fore.LIGHTWHITE_EX}* {message_str}"
-                        
-                        return f"{time_str} {level_str} {message_str}"
+                    # 获取当前时间
+                    from packages.utils.GetTime import gettime
+                    current_time = gettime()
+                    
+                    # 根据日志级别设置不同的格式
+                    if record.levelname == 'INFO':
+                        # INFO级别日志格式
+                        console_output = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{current_time}{Style.BRIGHT}{Fore.LIGHTWHITE_EX} INF{Fore.RESET}{Fore.LIGHTBLACK_EX}] {Fore.LIGHTWHITE_EX}{message}"
+                        file_output = f"[{current_time} INF] {message}"
+                    elif record.levelname == 'WARNING':
+                        # WARN级别日志格式
+                        console_output = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{current_time}{Style.BRIGHT}{Fore.LIGHTYELLOW_EX} WRN{Fore.RESET}{Fore.LIGHTBLACK_EX}] {Fore.LIGHTWHITE_EX}* {message}"
+                        file_output = f"[{current_time} WRN] * {message}"
+                    elif record.levelname == 'ERROR':
+                        # ERROR级别日志格式
+                        console_output = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{current_time} {Back.RED}{Style.BRIGHT}{Fore.LIGHTWHITE_EX}ERR{Back.RESET}{Fore.RESET}{Fore.LIGHTBLACK_EX}] {Fore.LIGHTWHITE_EX}* {message}"
+                        file_output = f"[{current_time} ERR] * {message}"
+                    elif record.levelname == 'DEBUG':
+                        # DEBUG级别日志格式
+                        console_output = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{current_time}{Style.BRIGHT}{Fore.LIGHTCYAN_EX} DBG{Fore.RESET}{Fore.LIGHTBLACK_EX}] {Fore.LIGHTWHITE_EX}{message}"
+                        file_output = f"[{current_time} DBG] {message}"
                     else:
-                        return log_message
+                        # 其他级别默认格式
+                        console_output = f"{Fore.LIGHTBLACK_EX}[{Fore.WHITE}{current_time}{Style.BRIGHT}{Fore.LIGHTMAGENTA_EX} {record.levelname}{Fore.RESET}{Fore.LIGHTBLACK_EX}] {Fore.LIGHTWHITE_EX}{message}"
+                        file_output = f"[{current_time} {record.levelname}] {message}"
+                    
+                    # 将文件输出保存到记录的属性中，以便文件处理器使用
+                    record.file_output = file_output
+                    
+                    return console_output
             
             return ColoredFormatter("%(message)s")
         
@@ -295,7 +345,17 @@ class CCTBLogger:
             # 创建文件处理器
             file_handler = logging.FileHandler(file_path, encoding='utf-8')
             file_handler.setLevel(level)
-            file_formatter = self._get_formatter(LogFormat.DETAILED)
+            
+            # 检查当前日志格式是否为彩色格式
+            config.load_logging_config()
+            log_format = config.get("log_format", "colored")
+            
+            # 使用相应的格式化器
+            if log_format == "colored":
+                file_formatter = self._get_file_formatter()
+            else:
+                file_formatter = self._get_formatter(LogFormat.DETAILED)
+            
             file_handler.setFormatter(file_formatter)
             self._logger.addHandler(file_handler)
             
