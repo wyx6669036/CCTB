@@ -2,6 +2,8 @@ import msvcrt
 import os
 from colorama import init, Fore, Style
 from packages import UtilsManager as utils
+from packages.utils.ErrorHandler import handle_exception, UserInputError
+from packages.utils.ConfigManager import config
 
 init(autoreset=True)
 
@@ -11,24 +13,26 @@ version：当前版本号
 runningDir：当前运行目录
 toolsDir：内置工具目录
 """
-version = "beta 0.1.1"
+version = config.get("version", "beta 0.1.1")
 
-runningDir = os.path.dirname(os.path.abspath(__file__))
+runningDir = config.get("runningDir", os.path.dirname(os.path.abspath(__file__)))
 
-options = [
+options = config.get("ui_options", [
     "1.Kill Mythware Classroom Management",
     "2.Enable \"Anti Full Screen Broadcast\" Thread",
     "3.Send teacher message",
-]
+])
 
 texts = Fore.LIGHTBLUE_EX + """\
-  ____ ____ _____ ____  
- / ___/ ___|_   _| __ ) 
-| |  | |     | | |  _ \\ 
-| |__| |___  | | | |_) |
- \\____\\____| |_| |____/  \n
+   ____    ____   _____   ____  
+  / ___|  / ___| |_   _| | __ ) 
+ | |     | |       | |   |  _ \ 
+ | |___  | |___    | |   | |_) |
+  \____|  \____|   |_|   |____/ 
+                                
 """ + Fore.RED + """This project created by wyx6669036\n""" + Fore.RESET + "_"*60
 
+@handle_exception(UserInputError, default_return=None, error_message="Menu display failed")
 def menu(selected_index):
     """显示菜单界面"""
     utils.Clear()
@@ -37,7 +41,7 @@ def menu(selected_index):
 
     for i, option in enumerate(options):
         if i == selected_index:
-            # 使用加粗红色字体显示选中项
+            # 使用加粗蓝色字体显示选中项
             print(Style.BRIGHT + Fore.LIGHTBLUE_EX + f"> {option}" + Style.RESET_ALL)
         else:
             print(f"  {option}")
@@ -45,28 +49,42 @@ def menu(selected_index):
     print("\n使用 ↑ ↓ 键选择，按 Enter 执行，按 'q' 退出")
 
 
+@handle_exception(UserInputError, default_return=None, error_message="Command UI operation failed")
 def main():
     selected_index = 0
 
     while True:
-        menu(selected_index)
+        try:
+            menu(selected_index)
 
-        # 等待按键输入
-        key = msvcrt.getch()
-
-        # 处理特殊按键（箭头键）
-        if key == b'\xe0':  # 箭头键前缀
+            # 等待按键输入
             key = msvcrt.getch()
-            if key == b'H':  # 上箭头
-                selected_index = (selected_index - 1) % len(options)
-            elif key == b'P':  # 下箭头
-                selected_index = (selected_index + 1) % len(options)
-        # 处理普通按键
-        elif key == b'\r':  # 回车键
-            utils.selectOption(selected_index)
-        elif key.lower() == b'q':  # 退出
-            break
-        # 其他按键不做处理，继续循环
+
+            # 处理特殊按键（箭头键）
+            if key == b'\xe0':  # 箭头键前缀
+                key = msvcrt.getch()
+                if key == b'H':  # 上箭头
+                    selected_index = (selected_index - 1) % len(options)
+                elif key == b'P':  # 下箭头
+                    selected_index = (selected_index + 1) % len(options)
+            # 处理普通按键
+            elif key == b'\r':  # 回车键
+                utils.selectOption(selected_index)
+            elif key.lower() == b'q':  # 退出
+                break
+            # 其他按键不做处理，继续循环
+            
+        except KeyboardInterrupt:
+            # 处理Ctrl+C中断
+            print(f"\n{Fore.YELLOW}Operation cancelled by user{Style.RESET_ALL}")
+            continue
+        except Exception as e:
+            # 处理其他异常
+            utils.error(f"An error occurred: {e}")
+            print(f"\n{Fore.YELLOW}Press any key to continue or 'q' to quit...{Style.RESET_ALL}")
+            key = msvcrt.getch()
+            if key == b'q':
+                break
 
 
 if __name__ == "__main__":

@@ -1,0 +1,45 @@
+{
+    "log_level": "INFO",
+    "log_file": "logs/cctb.log",
+    "log_format": "colored",
+    "max_file_size": 10485760,
+    "backup_count": 5,
+    "enable_console": true,
+    "enable_file": true,
+    "console_level": "INFO",
+    "file_level": "DEBUG",
+    "loggers": {
+        "CCTB": {
+            "level": "DEBUG",
+            "handlers": ["console", "file"]
+        },
+        "requests": {
+            "level": "WARNING",
+            "handlers": ["console"]
+        },
+        "urllib3": {
+            "level": "WARNING",
+            "handlers": ["console"]
+        }
+    },
+    "custom_formatters": {
+        "simple": {
+            "format": "%(asctime)s [%(levelname)s] %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        },
+        "detailed": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        },
+        "json": {
+            "format": "json",
+            "datefmt": "%Y-%m-%dT%H:%M:%S"
+        }
+    },
+    "filters": {
+        "sensitive_data": {
+            "pattern": "password|token|secret|key",
+            "replacement": "***REDACTED***"
+        }
+    }
+}
