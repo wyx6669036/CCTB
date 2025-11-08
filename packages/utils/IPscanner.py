@@ -1,6 +1,5 @@
 """
-lan_scan.py
-
+局域网IP扫描模块
 快速的并发局域网主机探测器（Windows 优先使用 ping）。
 用法示例：
   python lan_scan.py --cidr 192.168.1.0/24
@@ -25,7 +24,12 @@ import packages.UtilsManager as utils
 
 
 def get_local_ip() -> str:
-    """通过 UDP 套接字发现主机对外使用的本地 IPv4 地址，不发送任何数据。"""
+    """
+    通过 UDP 套接字发现主机对外使用的本地 IPv4 地址，不发送任何数据。
+    
+    返回:
+        str: 本地IPv4地址，如果获取失败则返回主机名对应的IP
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         # 连接到一个公共地址（不真正发送数据）以获取本地出口地址
@@ -40,15 +44,38 @@ def get_local_ip() -> str:
 
 
 def generate_ips_from_cidr(cidr: str) -> List[str]:
-    net = ipaddress.ip_network(cidr, strict=False)
-    return [str(ip) for ip in net.hosts()]
+    """
+    从CIDR表示法生成IP地址列表
+    
+    参数:
+        cidr (str): CIDR格式的网络地址，如 "192.168.1.0/24"
+        
+    返回:
+        List[str]: 网络中所有主机的IP地址列表
+        
+    异常:
+        ValueError: 当CIDR格式无效时抛出异常
+    """
+    try:
+        net = ipaddress.ip_network(cidr, strict=False)
+        return [str(ip) for ip in net.hosts()]
+    except Exception as e:
+        raise ValueError(f"Invalid CIDR format: {e}")
 
 
 def ping_host(ip: str, timeout_ms: int = 500) -> Tuple[str, bool, float]:
-    """Ping 指定 IP，返回 (ip, is_alive, rtt_ms).
+    """
+    Ping 指定 IP，返回 (ip, is_alive, rtt_ms).
     在 Windows 上使用 `ping -n 1 -w timeout`。
     timeout_ms 的单位是毫秒。
     如果无法测量 RTT，则返回 rtt_ms = -1.
+    
+    参数:
+        ip (str): 要ping的IP地址
+        timeout_ms (int): ping超时时间，单位毫秒，默认500
+        
+    返回:
+        Tuple[str, bool, float]: 包含IP地址、是否存活、往返时间的元组
     """
     system = platform.system()
     if system == "Windows":
@@ -72,24 +99,41 @@ def ping_host(ip: str, timeout_ms: int = 500) -> Tuple[str, bool, float]:
 
 
 def scan_ips(ips: Iterable[str], workers: int = 200, timeout_ms: int = 500) -> List[Tuple[str, float]]:
-    """并发扫描 IP 列表，返回存活主机的 (ip, rtt_ms) 列表，按照 IP 排序。"""
+    """
+    并发扫描 IP 列表，返回存活主机的 (ip, rtt_ms) 列表，按照 IP 排序。
+    
+    参数:
+        ips (Iterable[str]): 要扫描的IP地址列表
+        workers (int): 并发线程数，默认200
+        timeout_ms (int): ping超时时间，单位毫秒，默认500
+        
+    返回:
+        List[Tuple[str, float]]: 存活主机的(IP地址, 往返时间)列表，按IP地址排序
+    """
     results: List[Tuple[str, float]] = []
-    with ThreadPoolExecutor(max_workers=workers) as ex:
-        futures = {ex.submit(ping_host, ip, timeout_ms): ip for ip in ips}
-        for fut in as_completed(futures):
-            ip = futures[fut]
-            try:
-                ip, alive, rtt = fut.result()
-                if alive:
-                    results.append((ip, rtt))
-            except Exception:
-                # 忽略单个任务错误
-                pass
+    try:
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            futures = {ex.submit(ping_host, ip, timeout_ms): ip for ip in ips}
+            for fut in as_completed(futures):
+                ip = futures[fut]
+                try:
+                    ip, alive, rtt = fut.result()
+                    if alive:
+                        results.append((ip, rtt))
+                except Exception:
+                    # 忽略单个任务错误
+                    pass
+    except Exception as e:
+        utils.error(f"Error during IP scanning: {e}")
+    
     results.sort(key=lambda x: tuple(int(p) for p in x[0].split('.')))
     return results
 
 
 def main():
+    """
+    主函数，处理命令行参数并执行IP扫描
+    """
     p = argparse.ArgumentParser(description="简单高效的局域网 IP 扫描工具（Windows 首选 ping）。")
     p.add_argument("--cidr", dest="cidr", help="要扫描的 CIDR（例如 192.168.1.0/24）。如果未提供且未使用 --test，则默认为自动检测的本机 /24。")
     p.add_argument("--workers", type=int, default=200, help="并发线程数（默认200）。")
@@ -97,27 +141,27 @@ def main():
     p.add_argument("--test", action="store_true", help="快速自检：自动检测本机 IP 并在 /30 小网段扫描以验证脚本工作。")
     args = p.parse_args()
 
-    if args.test:
-        local_ip = get_local_ip()
-        # 选择一个 /30 来做非常快速的自检（包含 2 个可用地址）
-        # 将 local_ip 转为网络地址的 base，如 192.168.1.5 -> 192.168.1.4/30
-        base = ipaddress.ip_network(local_ip + "/30", strict=False).network_address
-        cidr = str(ipaddress.ip_network(f"{base}/30", strict=False))
-        utils.info(f"[test] Detected local IP {local_ip}, testing on {cidr}")
-    else:
-        if args.cidr:
-            cidr = args.cidr
-        else:
-            # 自动检测并假设 /24
-            local_ip = get_local_ip()
-            prefix = 24
-            cidr = f"{local_ip}/{prefix}"
-            utils.info(f"Auto-detected IP {local_ip}, defaulting to {cidr}")
-
     try:
+        if args.test:
+            local_ip = get_local_ip()
+            # 选择一个 /30 来做非常快速的自检（包含 2 个可用地址）
+            # 将 local_ip 转为网络地址的 base，如 192.168.1.5 -> 192.168.1.4/30
+            base = ipaddress.ip_network(local_ip + "/30", strict=False).network_address
+            cidr = str(ipaddress.ip_network(f"{base}/30", strict=False))
+            utils.info(f"[test] Detected local IP {local_ip}, testing on {cidr}")
+        else:
+            if args.cidr:
+                cidr = args.cidr
+            else:
+                # 自动检测并假设 /24
+                local_ip = get_local_ip()
+                prefix = 24
+                cidr = f"{local_ip}/{prefix}"
+                utils.info(f"Auto-detected IP {local_ip}, defaulting to {cidr}")
+
         ips = generate_ips_from_cidr(cidr)
     except Exception as e:
-        utils.error(f"Invalid CIDR '{cidr}': {e}")
+        utils.error(f"Error setting up scan: {e}")
         return
 
     utils.info(f"Scanning {len(ips)} addresses from {cidr} with {args.workers} workers, timeout={args.timeout}ms...")
