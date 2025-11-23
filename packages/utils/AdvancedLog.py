@@ -17,6 +17,8 @@ from packages.utils.ConfigManager import config
 # 初始化colorama
 init(autoreset=True)
 
+# 全局log_file位置
+log_file = ""
 
 class LogLevel(Enum):
     """日志级别枚举"""
@@ -61,7 +63,10 @@ class CCTBLogger:
         """设置日志记录器"""
         # 首先尝试加载日志配置
         config.load_logging_config()
-        
+
+        # 设置全局变量log_file
+        global log_file
+
         # 创建日志记录器
         self._logger = logging.getLogger("CCTB")
         self._logger.setLevel(logging.DEBUG)

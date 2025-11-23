@@ -42,9 +42,10 @@ def main():
 
     # 初始化日志文件
     try:
-        if os.path.exists("log.txt"):
-            os.remove("log.txt")
-        with open("log.txt", "x", encoding="ANSI") as f:
+        from packages.utils import AdvancedLog
+        if os.path.exists(AdvancedLog.log_file):
+            os.remove(AdvancedLog.log_file)
+        with open(AdvancedLog.log_file, "x", encoding="ANSI") as f:
             f.write("")
     except Exception as e:
         utils.error(f"Failed to initialize log file: {e}")

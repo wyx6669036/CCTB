@@ -1,11 +1,8 @@
 {
-    "version": "1.0.0",
     "debug": false,
     "target_port": 7500,
     "timeout": 5,
     "max_message_length": 954,
-    "log_level": "INFO",
-    "log_file": "log.txt",
     "performance_monitoring": true,
     "performance_monitor_interval": 5.0,
     "performance_auto_optimize": true,

@@ -50,13 +50,10 @@ main.py能够帮助你自动获取管理员权限，并保证日志正常运行
 
 ```json
 {
-    "version": "1.0.0",                    // 版本号
     "debug": false,                        // 调试模式
     "target_port": 7500,                   // 目标端口
     "timeout": 5,                          // 超时时间（秒）
     "max_message_length": 954,             // 最大消息长度
-    "log_level": "INFO",                   // 日志级别
-    "log_file": "log.txt",                 // 日志文件
     "performance_monitoring": true,        // 是否启用性能监控
     "performance_monitor_interval": 5.0,   // 性能监控间隔（秒）
     "performance_auto_optimize": true,     // 是否启用自动优化
@@ -90,11 +87,6 @@ CCTB/
 ├── config/                    # 配置文件
 │   ├── config.json           # 主配置文件
 │   └── logging.json          # 日志配置文件
-├── tests/                     # 单元测试
-│   ├── test_config_manager.py
-│   ├── test_error_handler.py
-│   ├── test_advanced_log.py
-│   └── test_performance.py
 └── docs/                      # 文档目录
 ```
 
