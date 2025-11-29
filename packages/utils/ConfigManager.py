@@ -28,20 +28,11 @@ class ConfigManager:
         if not self._initialized:
             self._config = {
                 # 应用程序基本配置
-                "version": "1.0.0",
-                "running_dir": os.path.dirname(os.path.abspath(__file__)),
                 "debug": False,
                 
                 # 网络配置
                 "target_port": 4705,
                 "timeout": 5,
-                
-                # UI配置
-                "ui_options": [
-                    "1.Kill Mythware Classroom Management",
-                    "2.Enable \"Anti Full Screen Broadcast\" Thread",
-                    "3.Send teacher message"
-                ],
                 
                 # 系统配置
                 "min_python_version": (3, 11),

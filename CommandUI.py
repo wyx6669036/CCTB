@@ -13,15 +13,15 @@ version：当前版本号
 runningDir：当前运行目录
 toolsDir：内置工具目录
 """
-version = config.get("version", "beta 0.1.1")
+version = "beta 0.1.2"
 
-runningDir = config.get("runningDir", os.path.dirname(os.path.abspath(__file__)))
+runningDir = os.path.dirname(os.path.abspath(__file__))
 
-options = config.get("ui_options", [
+options = [
     "1.Kill Mythware Classroom Management",
     "2.Enable \"Anti Full Screen Broadcast\" Thread",
     "3.Send teacher message",
-])
+]
 
 # 主页面上方文字，准备改成legacy0.4信息多一点的样子，不知道会不会看着很乱，等着吧
 texts = Fore.LIGHTBLUE_EX + """\

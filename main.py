@@ -1,16 +1,13 @@
-"""
-CCTB主程序入口
-用于启动应用程序并处理管理员权限检查
-"""
-
 import ctypes
 import sys
 import os
-import signal
+import time
 from packages import UtilsManager as utils
 from packages.utils.ErrorHandler import handle_exception, SystemError, PermissionError
 from packages.utils.ConfigManager import config
 from packages.utils.Performance import initialize_performance_manager, start_performance_monitoring, stop_performance_monitoring
+from packages.bypass.forceTop import set_console_topmost
+from packages.bypass import autoTop
 
 
 @handle_exception(SystemError, reraise=True, error_message="Application failed to start")
@@ -25,6 +22,11 @@ def main():
     4. 启动命令行界面
     5. 程序退出时清理资源
     """
+    # 强制窗口置顶
+    set_console_topmost(enable=True)
+    # 定时锁焦点
+    autoTop.start()
+
     # 检查管理员权限
     if not utils.AdmCheck():
         if utils.SysCheck()["name"] == "windows":
@@ -43,10 +45,8 @@ def main():
     # 初始化日志文件
     try:
         from packages.utils import AdvancedLog
-        if os.path.exists(AdvancedLog.log_file):
-            os.remove(AdvancedLog.log_file)
-        with open(AdvancedLog.log_file, "x", encoding="ANSI") as f:
-            f.write("")
+        with open(AdvancedLog.log_file, "w", encoding="ANSI") as f:
+            f.truncate(0)
     except Exception as e:
         utils.error(f"Failed to initialize log file: {e}")
 
@@ -88,6 +88,8 @@ def main():
     
     # 程序退出
     utils.info("Exiting...")
+    # 取消置顶
+    set_console_topmost(enable=False)
     
     # 停止性能监控
     try:
