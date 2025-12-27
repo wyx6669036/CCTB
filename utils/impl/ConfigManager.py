@@ -4,8 +4,8 @@
 """
 
 import os
-from typing import Dict, Any, Optional
-from packages.utils.ErrorHandler import handle_exception, CCTBException
+from typing import Dict, Any
+from utils.impl.ErrorHandler import handle_exception, CCTBException
 
 
 class ConfigError(CCTBException):

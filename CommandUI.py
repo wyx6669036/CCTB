@@ -1,9 +1,9 @@
 import msvcrt
 import os
 from colorama import init, Fore, Style
-from packages import UtilsManager as utils
-from packages.utils.ErrorHandler import handle_exception, UserInputError
-from packages.utils.ConfigManager import config
+from utils import UtilsManager as utils
+from utils.impl.ErrorHandler import handle_exception, UserInputError
+from utils.impl.ConfigManager import config
 
 init(autoreset=True)
 

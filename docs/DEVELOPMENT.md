@@ -131,7 +131,7 @@ def process_data(
 使用自定义异常类和装饰器进行错误处理：
 
 ```python
-from packages.utils.ErrorHandler import handle_exception, CCTBException
+from utils.impl.ErrorHandler import handle_exception, CCTBException
 
 class CustomError(CCTBException):
     """自定义异常类。"""
@@ -157,7 +157,7 @@ def risky_operation(param: str) -> Optional[str]:
 使用统一的日志记录器：
 
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 logger = log_manager.get_logger(__name__)
 
@@ -185,7 +185,7 @@ def some_function():
 3. 添加单元测试：
    ```python
    import unittest
-   from packages.utils.module import function_to_test
+   from utils.impl.module import function_to_test
    
    class TestNewFeature(unittest.TestCase):
        def test_function(self):
@@ -227,7 +227,7 @@ def some_function():
 ```python
 import unittest
 from unittest.mock import patch, MagicMock
-from packages.utils.module import ClassToTest
+from utils.impl.module import ClassToTest
 
 class TestClassToTest(unittest.TestCase):
     def setUp(self):
@@ -248,7 +248,7 @@ class TestClassToTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.instance.method(None)
     
-    @patch('packages.utils.module.external_dependency')
+    @patch('utils.impl.module.external_dependency')
     def test_method_with_mock(self, mock_dependency):
         """测试方法使用模拟对象。"""
         mock_dependency.return_value = "mocked_value"
@@ -262,8 +262,8 @@ class TestClassToTest(unittest.TestCase):
 
 ```python
 import unittest
-from packages.utils.ConfigManager import config
-from packages.utils.LogManager import log_manager
+from utils.impl.ConfigManager import config
+from utils.impl.LogManager import log_manager
 
 class TestConfigLoggingIntegration(unittest.TestCase):
     def test_config_logging_integration(self):
@@ -288,7 +288,7 @@ class TestConfigLoggingIntegration(unittest.TestCase):
 ```python
 import unittest
 import time
-from packages.utils.Performance import PerformanceMonitor
+from utils.impl.Performance import PerformanceMonitor
 
 class TestPerformance(unittest.TestCase):
     def test_performance_monitor(self):
@@ -342,7 +342,7 @@ python -m pytest tests/test_config_manager.py::TestConfigManager::test_get -v
 使用性能监控模块识别性能瓶颈：
 
 ```python
-from packages.utils.Performance import initialize_performance_manager, get_performance_stats
+from utils.impl.Performance import initialize_performance_manager, get_performance_stats
 
 # 初始化性能监控
 initialize_performance_manager()
@@ -375,7 +375,7 @@ print(f"内存使用: {stats['current']['memory_mb']}MB")
 启用详细日志记录：
 
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 # 创建调试日志记录器
 logger = log_manager.create_logger(
@@ -394,7 +394,7 @@ logger.debug("函数调用: %s", function_name)
 使用异常处理捕获和记录错误：
 
 ```python
-from packages.utils.ErrorHandler import handle_exception
+from utils.impl.ErrorHandler import handle_exception
 
 @handle_exception(Exception, reraise=True)
 def debug_function():
@@ -413,7 +413,7 @@ def debug_function():
 使用性能监控识别性能问题：
 
 ```python
-from packages.utils.Performance import PerformanceMonitor
+from utils.impl.Performance import PerformanceMonitor
 
 # 创建性能监控器
 monitor = PerformanceMonitor()

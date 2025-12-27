@@ -4,12 +4,12 @@
 """
 
 import platform
-from packages.utils.ErrorHandler import handle_exception, SystemError
+from utils.impl.ErrorHandler import handle_exception, SystemError
 
 """
 检查系统版本工具
 使用方法：
-import packages.UtilsManager as utils
+import utils.implManager as utils
 utils.SysCheck()
 
 返回值：json

@@ -6,7 +6,7 @@
 
 ### ConfigManager - 配置管理器
 
-`packages.utils.ConfigManager.ConfigManager`
+`utils.impl.ConfigManager.ConfigManager`
 
 配置管理器使用单例模式，提供配置的读取、设置、更新和持久化功能。
 
@@ -24,7 +24,7 @@
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 获取配置值
 port = config.get("target_port", 7500)
@@ -40,7 +40,7 @@ debug = config.get("debug", False)
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 设置配置值
 config.set("timeout", 10)
@@ -55,7 +55,7 @@ config.set("debug", True)
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 批量更新配置
 config.update({
@@ -73,7 +73,7 @@ config.update({
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 保存配置到文件
 config.save_to_file()
@@ -87,7 +87,7 @@ config.save_to_file()
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 从文件加载配置
 config.load_from_file()
@@ -101,7 +101,7 @@ config.load_from_file()
 
 **示例:**
 ```python
-from packages.utils.ConfigManager import config
+from utils.impl.ConfigManager import config
 
 # 加载日志配置
 config.load_logging_config()
@@ -111,7 +111,7 @@ config.load_logging_config()
 
 ### ErrorHandler - 错误处理
 
-`packages.utils.ErrorHandler`
+`utils.impl.ErrorHandler`
 
 提供异常处理装饰器和预定义异常类。
 
@@ -128,7 +128,7 @@ config.load_logging_config()
 
 **示例:**
 ```python
-from packages.utils.ErrorHandler import handle_exception, NetworkError
+from utils.impl.ErrorHandler import handle_exception, NetworkError
 
 @handle_exception(NetworkError, default_return=False, error_message="Network operation failed")
 def send_data(data):
@@ -167,7 +167,7 @@ def send_data(data):
 
 **示例:**
 ```python
-from packages.utils.ErrorHandler import safe_execute
+from utils.impl.ErrorHandler import safe_execute
 
 # 安全执行函数
 result = safe_execute(risky_function, arg1, arg2)
@@ -186,7 +186,7 @@ result = safe_execute(risky_function, arg1, arg2)
 
 **示例:**
 ```python
-from packages.utils.ErrorHandler import validate_and_execute
+from utils.impl.ErrorHandler import validate_and_execute
 
 def validate_input(data):
     return isinstance(data, str) and len(data) > 0
@@ -199,7 +199,7 @@ result = validate_and_execute(validate_input, process_data, "test")
 
 ### LogManager - 日志管理器
 
-`packages.utils.LogManager.LogManager`
+`utils.impl.LogManager.LogManager`
 
 日志管理器使用单例模式，提供日志记录器的创建、获取和配置功能。
 
@@ -216,7 +216,7 @@ result = validate_and_execute(validate_input, process_data, "test")
 
 **示例:**
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 # 获取日志记录器
 logger = log_manager.get_logger("my_module")
@@ -238,7 +238,7 @@ logger.info("This is an info message")
 
 **示例:**
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 # 创建日志记录器
 logger = log_manager.create_logger(
@@ -257,7 +257,7 @@ logger.debug("This is a debug message")
 
 **示例:**
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 # 从配置字典配置日志系统
 config = {
@@ -276,7 +276,7 @@ log_manager.configure_from_config(config)
 
 **示例:**
 ```python
-from packages.utils.LogManager import log_manager
+from utils.impl.LogManager import log_manager
 
 # 移除日志记录器
 log_manager.remove_logger("my_module")
@@ -286,7 +286,7 @@ log_manager.remove_logger("my_module")
 
 ### Performance - 性能监控
 
-`packages.utils.Performance`
+`utils.impl.Performance`
 
 提供性能监控和资源优化功能。
 
@@ -305,7 +305,7 @@ log_manager.remove_logger("my_module")
 
 **示例:**
 ```python
-from packages.utils.Performance import PerformanceMonitor
+from utils.impl.Performance import PerformanceMonitor
 
 # 创建性能监控器
 monitor = PerformanceMonitor()
@@ -334,7 +334,7 @@ monitor.stop_monitoring()
 
 **示例:**
 ```python
-from packages.utils.Performance import PerformanceMonitor, ResourceOptimizer
+from utils.impl.Performance import PerformanceMonitor, ResourceOptimizer
 
 # 创建性能监控器和优化器
 monitor = PerformanceMonitor()
@@ -380,7 +380,7 @@ optimizer.start_auto_optimization(interval=30.0)
 
 ### IPscanner - IP扫描
 
-`packages.utils.IPscanner`
+`utils.impl.IPscanner`
 
 提供IP扫描功能。
 
@@ -394,7 +394,7 @@ optimizer.start_auto_optimization(interval=30.0)
 
 **示例:**
 ```python
-from packages.utils.IPscanner import get_local_ip
+from utils.impl.IPscanner import get_local_ip
 
 # 获取本地IP
 local_ip = get_local_ip()
@@ -412,7 +412,7 @@ print(f"Local IP: {local_ip}")
 
 **示例:**
 ```python
-from packages.utils.IPscanner import generate_ips_from_cidr
+from utils.impl.IPscanner import generate_ips_from_cidr
 
 # 生成IP地址列表
 cidr = "192.168.1.0/24"
@@ -432,7 +432,7 @@ Ping指定IP地址。
 
 **示例:**
 ```python
-from packages.utils.IPscanner import ping_host
+from utils.impl.IPscanner import ping_host
 
 # Ping主机
 ip, alive, rtt = ping_host("192.168.1.1", timeout_ms=1000)
@@ -455,7 +455,7 @@ else:
 
 **示例:**
 ```python
-from packages.utils.IPscanner import scan_ips, generate_ips_from_cidr
+from utils.impl.IPscanner import scan_ips, generate_ips_from_cidr
 
 # 扫描网段
 cidr = "192.168.1.0/24"
@@ -470,7 +470,7 @@ for ip, rtt in alive_hosts:
 
 ### fuckMythware - 极域通信
 
-`packages.utils.fuckMythware`
+`utils.impl.fuckMythware`
 
 提供与极域课堂系统通信的功能。
 
@@ -488,7 +488,7 @@ for ip, rtt in alive_hosts:
 
 **示例:**
 ```python
-from packages.utils.fuckMythware import anti_full_screen
+from utils.impl.fuckMythware import anti_full_screen
 
 # 反全屏
 success = anti_full_screen("192.168.1.100")
@@ -509,7 +509,7 @@ if success:
 
 **示例:**
 ```python
-from packages.utils.fuckMythware import send_teacher_message
+from utils.impl.fuckMythware import send_teacher_message
 
 # 发送教师消息
 success = send_teacher_message("Hello, students!", "192.168.1.100")
@@ -530,7 +530,7 @@ if success:
 
 **示例:**
 ```python
-from packages.utils.fuckMythware import start_applicaion
+from utils.impl.fuckMythware import start_applicaion
 
 # 启动应用程序
 success = start_applicaion("C:\\Windows\\System32\\notepad.exe", "192.168.1.100")
@@ -542,7 +542,7 @@ if success:
 
 ### UtilsManager - 工具管理器
 
-`packages.UtilsManager`
+`utils.implManager`
 
 提供对各种工具函数的统一访问接口，带有错误处理。
 
@@ -589,7 +589,7 @@ if success:
 
 **示例:**
 ```python
-from packages import UtilsManager as utils
+from utils import UtilsManager as utils
 
 # 使用工具管理器
 utils.info("Starting application")

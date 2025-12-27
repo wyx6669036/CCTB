@@ -4,7 +4,7 @@
 """
 
 import datetime
-from packages.utils.ErrorHandler import handle_exception, SystemError
+from utils.impl.ErrorHandler import handle_exception, SystemError
 
 
 @handle_exception(SystemError, default_return="1970-01-01", error_message="Failed to get current date")

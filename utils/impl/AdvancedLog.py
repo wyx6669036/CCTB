@@ -7,12 +7,11 @@ import sys
 import logging
 import logging.handlers
 from enum import Enum
-from typing import Optional, Union, Dict, Any
+from typing import Union
 from datetime import datetime
 from colorama import Fore, Style, Back, init
-from packages.utils.GetTime import getdatetime
-from packages.utils.ErrorHandler import handle_exception, CCTBException
-from packages.utils.ConfigManager import config
+from utils.impl.ErrorHandler import handle_exception, CCTBException
+from utils.impl.ConfigManager import config
 
 # 初始化colorama
 init(autoreset=True)
@@ -145,7 +144,7 @@ class CCTBLogger:
                 message = record.getMessage()
                 
                 # 获取当前时间
-                from packages.utils.GetTime import gettime
+                from utils.impl.GetTime import gettime
                 current_time = gettime()
                 
                 # 根据日志级别设置不同的格式
@@ -196,7 +195,7 @@ class CCTBLogger:
                     message = record.getMessage()
                     
                     # 获取当前时间
-                    from packages.utils.GetTime import gettime
+                    from utils.impl.GetTime import gettime
                     current_time = gettime()
                     
                     # 根据日志级别设置不同的格式

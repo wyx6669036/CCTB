@@ -2,7 +2,7 @@ import win32gui
 import win32con
 import sys
 import os
-from packages import UtilsManager as utils
+from utils import UtilsManager as utils
 
 
 def set_console_topmost(enable: bool = True):
@@ -17,7 +17,6 @@ def set_console_topmost(enable: bool = True):
     if not hwnd:
         # 若未找到窗口（可能是交互式环境或标题被修改），尝试通过进程ID查找
         import win32process
-        import ctypes
 
         # 获取当前进程ID
         pid = os.getpid()

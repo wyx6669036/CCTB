@@ -1,6 +1,6 @@
 import os
-from packages import UtilsManager as utils
-from packages.utils.ErrorHandler import handle_exception
+from utils import UtilsManager as utils
+from utils.impl.ErrorHandler import handle_exception
 
 @handle_exception(default_return=None, error_message="Failed to clear screen")
 def clearScreen():

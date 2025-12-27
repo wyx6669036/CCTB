@@ -4,7 +4,7 @@
 """
 
 # 导入新的日志管理系统
-from packages.utils.LogManager import log_manager, info as _info, warn as _warn, error as _error, debug as _debug
+from utils.impl.LogManager import log_manager, info as _info, warn as _warn, error as _error, debug as _debug
 
 # 为了向后兼容，导出相同的函数
 info = _info

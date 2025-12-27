@@ -5,12 +5,12 @@
 
 import ctypes
 import os
-from packages.utils import SysCheck
-from packages.utils.ErrorHandler import handle_exception, PermissionError
+from utils.impl import SysCheck
+from utils.impl.ErrorHandler import handle_exception, PermissionError
 
 """
 使用方法：
-import packages.UtilsManager as utils
+import utils.implManager as utils
 utils.AdmCheck
 
 返回值：True/False

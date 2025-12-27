@@ -6,19 +6,17 @@ Thank you!
 ————wyx6669036
 """
 import socket
-import struct
-import time
 import ctypes
-from packages import UtilsManager as utils
-from packages.utils.ErrorHandler import handle_exception, NetworkError
-from packages.utils.ConfigManager import config
+from utils import UtilsManager as utils
+from utils.impl.ErrorHandler import handle_exception, NetworkError
+from utils.impl.ConfigManager import config
 
 # 从配置管理器获取目标端口
 TARGET_PORT = config.get("target_port", 4705)
 
 """
 使用方法：
-import packages.UtilsManager as utils
+import utils.implManager as utils
 utils.anti_full_screen("192.168.153.1") # 强制屏幕广播窗口化
 utils.send_teacher_message("123","192.168.153.1") # 向学生端发送教师聊天信息
 utils.start_applicaion("cmd","192.168.153.1") # 向学生端发送打开程序请求（可能失效）

@@ -7,7 +7,7 @@ import time
 import threading
 import sys
 import os
-from packages import UtilsManager as utils
+from utils import UtilsManager as utils
 
 # 全局配置
 TOPMOST_INTERVAL = 120  # 自动前置间隔（秒）= 2分钟

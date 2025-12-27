@@ -1,11 +1,10 @@
 import ctypes
 import sys
 import os
-import time
-from packages import UtilsManager as utils
-from packages.utils.ErrorHandler import handle_exception, SystemError, PermissionError
-from packages.utils.ConfigManager import config
-from packages.utils.Performance import initialize_performance_manager, start_performance_monitoring, stop_performance_monitoring
+from utils import UtilsManager as utils
+from utils.impl.ErrorHandler import handle_exception, SystemError, PermissionError
+from utils.impl.ConfigManager import config
+from utils.impl.Performance import initialize_performance_manager, start_performance_monitoring, stop_performance_monitoring
 from packages.bypass.forceTop import set_console_topmost
 from packages.bypass import autoTop
 
@@ -44,7 +43,7 @@ def main():
 
     # 初始化日志文件
     try:
-        from packages.utils import AdvancedLog
+        from utils.impl import AdvancedLog
         with open(AdvancedLog.log_file, "w", encoding="ANSI") as f:
             f.truncate(0)
     except Exception as e:

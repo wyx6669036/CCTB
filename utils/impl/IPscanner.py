@@ -5,7 +5,7 @@ IPscanner.py
 
 叫AI生成的没什么好说，可单独使用（移除对utils的依赖）
 用法：
-import packages.UtilsManager as utils
+import utils.implManager as utils
 utils.ip_scanner()
 
 返回值(eg.)：[("192.168.153.1",200)]
@@ -32,8 +32,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Iterable, List, Tuple
-import packages.UtilsManager as utils
-from packages.utils.ErrorHandler import handle_exception, NetworkError, SystemError
+import utils.implManager as utils
+from utils.impl.ErrorHandler import handle_exception, NetworkError, SystemError
 
 
 @handle_exception(NetworkError, default_return="127.0.0.1", error_message="Failed to get local IP address")
