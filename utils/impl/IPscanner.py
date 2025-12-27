@@ -5,7 +5,7 @@ IPscanner.py
 
 叫AI生成的没什么好说，可单独使用（移除对utils的依赖）
 用法：
-import utils.implManager as utils
+import utils.UtilsManager as utils
 utils.ip_scanner()
 
 返回值(eg.)：[("192.168.153.1",200)]
@@ -32,7 +32,7 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Iterable, List, Tuple
-import utils.implManager as utils
+import utils.UtilsManager as utils
 from utils.impl.ErrorHandler import handle_exception, NetworkError, SystemError
 
 

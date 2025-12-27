@@ -10,7 +10,7 @@ from utils.impl.ErrorHandler import handle_exception, PermissionError
 
 """
 使用方法：
-import utils.implManager as utils
+import utils.UtilsManager as utils
 utils.AdmCheck
 
 返回值：True/False

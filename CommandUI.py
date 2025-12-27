@@ -21,6 +21,7 @@ options = [
     "1.Kill Mythware Classroom Management",
     "2.Enable \"Anti Full Screen Broadcast\" Thread",
     "3.Send teacher message",
+    "4.Start application",
 ]
 
 # 主页面上方文字，准备改成legacy0.4信息多一点的样子，不知道会不会看着很乱，等着吧

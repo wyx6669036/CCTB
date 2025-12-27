@@ -2,14 +2,15 @@
 选项处理模块
 负责处理用户选择的操作选项并执行相应功能
 """
-
-import utils.UtilsManager as utils
 from colorama import Fore, init
-from utils.impl.ErrorHandler import handle_exception, SystemError, ValidationError
 
-from modules.M0 import _handle_kill_process
-from modules.M1 import _handle_anti_full_screen
-from modules.M2 import _handle_send_teacher_message
+import CommandUI
+import utils.UtilsManager as utils
+from options.modules.M0 import _handle_kill_process
+from options.modules.M1 import _handle_anti_full_screen
+from options.modules.M2 import _handle_send_teacher_message
+from options.modules.M3 import _handle_start_application
+from utils.impl.ErrorHandler import handle_exception, ValidationError
 
 # 初始化colorama，确保颜色重置
 init(autoreset=True)
@@ -29,18 +30,22 @@ def selectOption(choice):
         2: 发送教师消息
     """
     # 验证输入
-    if not isinstance(choice, int) or choice < 0 or choice > 2:
-        raise ValidationError(f"Invalid choice: {choice}. Must be 0, 1, or 2.")
+    if not isinstance(choice, int) or choice < 0 or choice > len(CommandUI.options):
+        utils.error(f"Invalid choice: {choice}.")
+        raise ValidationError(f"Invalid choice: {choice}.")
     
     utils.info("Option selected: " + str(choice))
     
     try:
-        if choice == 0:
-            _handle_kill_process()
-        elif choice == 1:
-            _handle_anti_full_screen()
-        elif choice == 2:
-            _handle_send_teacher_message()
+        match choice:
+            case 0:
+                _handle_kill_process()
+            case 1:
+                _handle_anti_full_screen()
+            case 2:
+                _handle_send_teacher_message()
+            case 3:
+                _handle_start_application()
     except KeyboardInterrupt:
         # 捕获并处理KeyboardInterrupt，直接返回到主菜单
         utils.info("\nOperation cancelled by user.")

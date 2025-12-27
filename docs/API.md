@@ -542,7 +542,7 @@ if success:
 
 ### UtilsManager - 工具管理器
 
-`utils.implManager`
+`utils.UtilsManager`
 
 提供对各种工具函数的统一访问接口，带有错误处理。
 

@@ -1,6 +1,6 @@
 """
 UtilsManager
-把所有（并非）功能整合为一个，使用时仅需import utils.implManager as utils即可
+把所有（并非）功能整合为一个，使用时仅需import utils.UtilsManager as utils即可
 有些功能没有整合到，要么用的不多要么懒得搞，到时候再说
 格式可以参考下面添加
 """
@@ -21,39 +21,6 @@ def ip_scanner(*args, **kwargs):
     from utils.impl.IPscanner import main as _main
     return _main(*args, **kwargs)
 
-
-def anti_full_screen(target_ip, target_port=None):
-    """Call the anti_full_screen implementation (lazy import)."""
-    from utils.impl.fuckMythware import anti_full_screen as _af
-    if target_port is None:
-        return _af(target_ip)
-    return _af(target_ip, target_port)
-
-
-def send_teacher_message(text, target_ip, target_port=None):
-    """发送教师消息，带有错误处理"""
-    from utils.impl.fuckMythware import send_teacher_message as _stm
-    
-    @handle_exception(NetworkError, default_return=False, error_message="Failed to send teacher message")
-    def _send():
-        if target_port is None:
-            return _stm(text, target_ip)
-        return _stm(text, target_ip, target_port)
-    
-    return _send()
-
-
-def start_applicaion(path, target_ip, target_port=None):
-    """启动应用程序，带有错误处理"""
-    from utils.impl.fuckMythware import start_applicaion as _sa
-    
-    @handle_exception(NetworkError, default_return=False, error_message="Failed to start application")
-    def _start():
-        if target_port is None:
-            return _sa(path, target_ip)
-        return _sa(path, target_ip, target_port)
-    
-    return _start()
 
 # Optionally provide direct module access helpers if other code expects attributes
 def get_utils_module(name: str):
