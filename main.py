@@ -1,6 +1,7 @@
 import ctypes
 import sys
 import os
+import psutil
 from utils import UtilsManager as utils
 from utils.impl.ErrorHandler import handle_exception, SystemError, PermissionError
 from utils.impl.ConfigManager import config
@@ -21,10 +22,13 @@ def main():
     4. 启动命令行界面
     5. 程序退出时清理资源
     """
-    # 强制窗口置顶
-    set_console_topmost(enable=True)
-    # 定时锁焦点
-    autoTop.start()
+
+    for process in psutil.process_iter(['name']):
+        if process.info['name'] == "studentmain.exe":
+            # 强制窗口置顶
+            set_console_topmost(enable=True)
+            # 定时锁焦点
+            autoTop.start()
 
     # 检查管理员权限
     if not utils.AdmCheck():
